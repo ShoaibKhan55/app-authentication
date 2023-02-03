@@ -4,7 +4,7 @@ const port = 3000;
 
 app.get("/", (req, res) => {
   res.send("Heyyyy");
-  console.log("Running");
+  console.log("I'm runnning buddy Running");
 });
 
 
