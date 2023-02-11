@@ -4,19 +4,30 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const mongoose = require("mongoose");
 const dotenv_1 = __importDefault(require("dotenv"));
-const bcrypt_1 = __importDefault(require("bcrypt"));
+const userModel_1 = __importDefault(require("./userModel"));
+const mongoose = require("mongoose");
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+const body_parser_1 = __importDefault(require("body-parser"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
+app.use(body_parser_1.default.json());
+app.use(body_parser_1.default.urlencoded({ extended: true }));
+app.use((req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
+    next();
+});
 app.get("/", (req, res) => {
     res.send("Express + TypeScript Server");
 });
 app.post("/register", (request, response) => {
-    bcrypt_1.default
+    bcrypt
         .hash(request.body.password, 10)
         .then((hashedPassword) => {
-        const user = new Users({
+        const user = new userModel_1.default({
             first_name: request.body.first_name,
             email: request.body.email,
             password: hashedPassword,
@@ -44,9 +55,9 @@ app.post("/register", (request, response) => {
     });
 });
 app.post("/login", (request, response) => {
-    Users.findOne({ email: request.body.email })
+    userModel_1.default.findOne({ email: request.body.email })
         .then((user) => {
-        bcrypt_1.default
+        bcrypt
             .compare(request.body.password, user.password)
             .then((passwordCheck) => {
             if (!passwordCheck) {

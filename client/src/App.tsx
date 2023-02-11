@@ -2,7 +2,7 @@ import React from "react";
 import Login from "./components/login";
 import Register from "./components/register";
 
-function App() : any {
+function App()  {
   return (
     <div>
       <Login />

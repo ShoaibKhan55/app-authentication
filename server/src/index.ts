@@ -1,13 +1,29 @@
 import express, { Express, Request, Response } from "express";
-const mongoose = require("mongoose");
-const jwt = require('jsonwebtoken');
 import dotenv from "dotenv";
 import Users from "./userModel";
-const bcrypt = require('bcryptjs');
+const mongoose = require("mongoose");
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt')
+import bodyParser from "body-parser";
 
 dotenv.config();
 
 const app: Express = express();
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, PATCH, OPTIONS"
+  );
+  next();
+});
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");
