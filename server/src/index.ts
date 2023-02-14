@@ -2,8 +2,8 @@ import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import Users from "./userModel";
 const mongoose = require("mongoose");
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt')
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 import bodyParser from "body-parser";
 
 dotenv.config();
@@ -29,43 +29,33 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");
 });
 
-app.post("/register", (request, response) => {
-  bcrypt
-    .hash(request.body.password, 10)
-    .then((hashedPassword: any) => {
-      const user = new Users({
-        first_name: request.body.first_name,
-        email: request.body.email,
-        password: hashedPassword,
-      });
+app.post("/register", async (request, response) => {
+  try {
+    const { password, email, first_name } = request.body;
 
-      user
-        .save()
-        .then((result: any) => {
-          response.status(201).send({
-            message: "User Created Successfully",
-            result,
-          });
-        })
-        .catch((error: any) => {
-          response.status(500).send({
-            message: "Error creating user",
-            error,
-          });
-        });
-    })
-    .catch((e: any) => {
-      response.status(500).send({
-        message: "Password was not hashed successfully",
-        e,
-      });
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const user = new Users({
+      first_name,
+      email,
+      password: hashedPassword,
     });
+    const userSaved = await user.save();
+    response.status(201).send({
+      message: "User Created Successfully",
+      userSaved,
+    });
+  } catch (error: any) {
+    response.status(500).send({
+      message: "Password was not hashed successfully",
+      error,
+    });
+  }
 });
 
 app.post("/login", (request, response) => {
-  Users.findOne({ email: request.body.email })
-
-    .then((user: any) => {
+  try {
+    Users.findOne({ email: request.body.email }).then((user: any) => {
       bcrypt
         .compare(request.body.password, user.password)
 
@@ -96,13 +86,13 @@ app.post("/login", (request, response) => {
             error,
           });
         });
-    })
-    .catch((e) => {
-      response.status(404).send({
-        message: "Email not found",
-        e,
-      });
     });
+  } catch (e: any) {
+    response.status(404).send({
+      message: "Email not found",
+      e,
+    });
+  }
 });
 
 // MONGO SETUP
