@@ -9,8 +9,6 @@ function Register() {
   const [passData, setPassData] = useState("");
   const dispatch = useDispatch();
 
-  const userDetail = () => {};
-
   const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const obj = {
