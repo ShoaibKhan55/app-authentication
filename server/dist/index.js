@@ -74,7 +74,7 @@ app.post("/login", (request, response) => {
                     email: user.email,
                     token,
                 });
-                const newToken = token;
+                const newToken = response;
                 console.log("🚀 ~ file: index.ts:84 ~ response.status ~ token:", newToken);
             })
                 .catch((error) => {
