@@ -53,8 +53,6 @@ app.post("/register", async (request, response) => {
   }
 });
 
-
-
 app.post("/login", (request, response) => {
   try {
     Users.findOne({ email: request.body.email }).then((user: any) => {
@@ -81,6 +79,11 @@ app.post("/login", (request, response) => {
             email: user.email,
             token,
           });
+          const newToken = token;
+          console.log(
+            "🚀 ~ file: index.ts:84 ~ response.status ~ token:",
+            newToken
+          );
         })
         .catch((error: any) => {
           response.status(400).send({
