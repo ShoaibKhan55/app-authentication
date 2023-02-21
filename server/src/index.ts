@@ -79,7 +79,7 @@ app.post("/login", (request, response) => {
             email: user.email,
             token,
           });
-          const newToken = response;
+          const newToken = token;
           console.log(
             "🚀 ~ file: index.ts:84 ~ response.status ~ token:",
             newToken
