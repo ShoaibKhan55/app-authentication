@@ -1,10 +1,11 @@
-import express, { Express, Request, Response } from "express";
+import express, { Express, Request, response, Response } from "express";
 import dotenv from "dotenv";
 import Users from "./userModel";
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 import bodyParser from "body-parser";
+import { request } from "http";
 
 dotenv.config();
 
@@ -100,6 +101,22 @@ app.post("/login", (request, response) => {
   }
 });
 
+const verifyToken = (req: any, res: any, next: any) => {
+  const token = req.headers("authorization");
+
+  if (!token) {
+    return res.sendStatus(401);
+  }
+
+  const verified = jwt.verify(token, "RANDOM-TOKEN");
+
+  req.body.user = verified;
+  next();
+};
+
+app.get("/protected", verifyToken, (request, response) => {
+  response.json({ message: "This is a protected route" });
+});
 // MONGO SETUP
 const port = process.env.PORT || 8080;
 const MONGO_URL = String(process.env.MONGO_URL);

@@ -92,6 +92,18 @@ app.post("/login", (request, response) => {
         });
     }
 });
+const verifyToken = (req, res, next) => {
+    const token = req.headers("authorization");
+    if (!token) {
+        return res.sendStatus(401);
+    }
+    const verified = jwt.verify(token, "RANDOM-TOKEN");
+    req.body.user = verified;
+    next();
+};
+app.get("/protected", verifyToken, (request, response) => {
+    response.json({ message: "This is a protected route" });
+});
 // MONGO SETUP
 const port = process.env.PORT || 8080;
 const MONGO_URL = String(process.env.MONGO_URL);
