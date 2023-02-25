@@ -18,11 +18,11 @@ const userModel_1 = __importDefault(require("./userModel"));
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const body_parser_1 = __importDefault(require("body-parser"));
-dotenv_1.default.config();
+const bodyParser = require("body-parser");
 const app = (0, express_1.default)();
-app.use(body_parser_1.default.json());
-app.use(body_parser_1.default.urlencoded({ extended: true }));
+dotenv_1.default.config();
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization");
@@ -56,7 +56,9 @@ app.post("/register", (request, response) => __awaiter(void 0, void 0, void 0, f
 }));
 app.post("/login", (request, response) => {
     try {
-        userModel_1.default.findOne({ email: request.body.email }).then((user) => {
+        userModel_1.default.findOne({
+            email: request.body.email,
+        }).then((user) => {
             bcrypt
                 .compare(request.body.password, user.password)
                 .then((passwordCheck) => {
@@ -93,13 +95,21 @@ app.post("/login", (request, response) => {
     }
 });
 const verifyToken = (req, res, next) => {
-    const token = req.headers("authorization");
-    if (!token) {
-        return res.sendStatus(401);
+    console.log("founded", req.body);
+    try {
+        const token = req.get("authorization");
+        if (!token) {
+            return res.sendStatus(401);
+        }
+        const verified = jwt.verify(token, "RANDOM-TOKEN");
+        next();
     }
-    const verified = jwt.verify(token, "RANDOM-TOKEN");
-    req.body.user = verified;
-    next();
+    catch (error) {
+        res.status(400).send({
+            massage: "not verified",
+            error,
+        });
+    }
 };
 app.get("/protected", verifyToken, (request, response) => {
     response.json({ message: "This is a protected route" });

@@ -4,12 +4,11 @@ import Users from "./userModel";
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-import bodyParser from "body-parser";
-import { request } from "http";
+const bodyParser = require("body-parser");
+const app: Express = express();
 
 dotenv.config();
 
-const app: Express = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -56,7 +55,9 @@ app.post("/register", async (request, response) => {
 
 app.post("/login", (request, response) => {
   try {
-    Users.findOne({ email: request.body.email }).then((user: any) => {
+    Users.findOne({
+      email: request.body.email,
+    }).then((user: any) => {
       bcrypt
         .compare(request.body.password, user.password)
 
@@ -102,16 +103,22 @@ app.post("/login", (request, response) => {
 });
 
 const verifyToken = (req: any, res: any, next: any) => {
-  const token = req.headers("authorization");
+  console.log("founded", req.body);
+  try {
+    const token = req.get("authorization");
+    if (!token) {
+      return res.sendStatus(401);
+    }
 
-  if (!token) {
-    return res.sendStatus(401);
+    const verified = jwt.verify(token, "RANDOM-TOKEN");
+
+    next();
+  } catch (error) {
+    res.status(400).send({
+      massage: "not verified",
+      error,
+    });
   }
-
-  const verified = jwt.verify(token, "RANDOM-TOKEN");
-
-  req.body.user = verified;
-  next();
 };
 
 app.get("/protected", verifyToken, (request, response) => {
