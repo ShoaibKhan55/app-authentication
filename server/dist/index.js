@@ -95,13 +95,13 @@ app.post("/login", (request, response) => {
     }
 });
 const verifyToken = (req, res, next) => {
-    console.log("founded", req.body);
     try {
         const token = req.get("authorization");
         if (!token) {
             return res.sendStatus(401);
         }
         const verified = jwt.verify(token, "RANDOM-TOKEN");
+        req.body.user = verified;
         next();
     }
     catch (error) {

@@ -103,7 +103,6 @@ app.post("/login", (request, response) => {
 });
 
 const verifyToken = (req: any, res: any, next: any) => {
-  console.log("founded", req.body);
   try {
     const token = req.get("authorization");
     if (!token) {
@@ -111,7 +110,7 @@ const verifyToken = (req: any, res: any, next: any) => {
     }
 
     const verified = jwt.verify(token, "RANDOM-TOKEN");
-
+    req.body.user = verified;
     next();
   } catch (error) {
     res.status(400).send({
