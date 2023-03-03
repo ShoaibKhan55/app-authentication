@@ -2,6 +2,26 @@ import express, { Request, Response } from "express";
 import Users from "../userModel";
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const bodyParser = require("body-parser");
+const app = express();
+
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use((req :any, res : any, next :any) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, PATCH, OPTIONS"
+  );
+  next();
+});
+
 
 export const homeResponse = async (req: Request, res: Response) => {
   res.status(200).json({ msg: "Express + TypeScript Server" });
