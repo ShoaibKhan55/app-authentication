@@ -3,19 +3,17 @@ import Users from "../userModel";
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
-
-
-
 export const UserRegistration = async (req: Request, res: Response) => {
   console.log(req.body, "req");
 
   try {
-    const { password, email, first_name } = req.body;
+    const { password, email, name } = req.body;
 
     const hashedPassword = await bcrypt.hash(password, 10);
+    console.log(hashedPassword, name, email);
 
     const user = new Users({
-      first_name,
+      name,
       email,
       password: hashedPassword,
     });

@@ -12,7 +12,7 @@ function Register() {
   const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const obj = {
-      first_name: userData,
+      name: userData,
       email: emailData,
       password: passData,
     };
@@ -22,7 +22,7 @@ function Register() {
     try {
       await axios({
         method: "post",
-        url: "http://localhost:8080/register",
+        url: "http://localhost:8080/api/register",
         data: obj,
       });
     } catch (error) {
