@@ -1,12 +1,11 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
-import Users from "./userModel";
+import {router} from  './routes/allRoutes'
 const mongoose = require("mongoose");
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
 const bodyParser = require("body-parser");
 const app: Express = express();
-const router = require("../router/routes");
+
+
 
 dotenv.config();
 

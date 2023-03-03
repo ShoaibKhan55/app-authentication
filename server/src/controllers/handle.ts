@@ -1,13 +1,13 @@
 import express, { Request, Response } from "express";
-import Users from "../src/userModel";
+import Users from "../userModel";
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
-const homeResponse = async (req: Request, res: Response) => {
+export const homeResponse = async (req: Request, res: Response) => {
   res.status(200).json({ msg: "Express + TypeScript Server" });
 };
 
-const UserRegistration = async (req: Request, res: Response) => {
+export const UserRegistration = async (req: Request, res: Response) => {
   try {
     const { password, email, first_name } = req.body;
 
@@ -31,7 +31,7 @@ const UserRegistration = async (req: Request, res: Response) => {
   }
 };
 
-const login = async (req: Request, res: Response) => {
+export const UserLogin = async (req: Request, res: Response) => {
   try {
     Users.findOne({
       email: req.body.email,
@@ -80,7 +80,7 @@ const login = async (req: Request, res: Response) => {
   }
 };
 
-const getVerifiedToken = (req: any, res: any, next: any) => {
+export const getVerifiedToken = (req: any, res: any, next: any) => {
   try {
     const token = req.get("authorization");
     if (!token) {
@@ -98,4 +98,3 @@ const getVerifiedToken = (req: any, res: any, next: any) => {
     });
   }
 };
-module.exports = { homeResponse, UserRegistration, login, getVerifiedToken };

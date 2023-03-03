@@ -1,15 +1,14 @@
-import express, { Express, Request, Response } from "express";
-const router = express.Router();
-const {
+import express, {Request, Response } from "express";
+export const router = express.Router();
+import {
   homeResponse,
   UserRegistration,
   UserLogin,
   getVerifiedToken,
-} = require("../controllers/handle");
+} from '../controllers/handle';
 
 router.route("/").get(homeResponse);
 router.route("/register").post(UserRegistration);
 router.route("/login").post(UserLogin);
 router.route("/protected").get(getVerifiedToken);
 
-module.exports = router;
