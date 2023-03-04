@@ -47,7 +47,7 @@ function Register() {
             type="email"
             placeholder="Email"
             className="input"
-          />
+          /> 
           <input
             value={passData}
             onChange={(e) => setPassData(e.target.value)}
