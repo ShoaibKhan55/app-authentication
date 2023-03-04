@@ -19,7 +19,7 @@ function Login() {
     try {
       const res = await axios({
         method: "post",
-        url: "http://localhost:8080/login",
+        url: "http://localhost:8080/api/login",
         data: obj,
       });
       console.log(res);

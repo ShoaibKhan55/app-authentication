@@ -18,6 +18,7 @@ const allRoutes_1 = require("./routes/allRoutes");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const app = (0, express_1.default)();
+dotenv_1.default.config();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use((req, res, next) => {
@@ -26,7 +27,6 @@ app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
     next();
 });
-dotenv_1.default.config();
 app.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.status(200).json({ msg: "Express + TypeScript Server" });
 }));

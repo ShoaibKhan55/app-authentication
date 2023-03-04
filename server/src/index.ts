@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const app = express();
 
+dotenv.config();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -20,7 +21,7 @@ app.use((req: any, res: any, next: any) => {
   );
   next();
 });
-dotenv.config();
+
 
 app.get("/", async (req: Request, res: Response) => {
   res.status(200).json({ msg: "Express + TypeScript Server" });
